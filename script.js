@@ -47,20 +47,54 @@ const ejercicio1 = () => {
     }
 }
 
-
-const ejercicio3 = () => {
-    // Si me hablan de traducir el fragmento de codigo a promesa es traducir la funcionalidad a promesa no voy a tratar de entender codigo que ya no se usa :^) 😎
-    const cross = {crossDomain:true}
+//Voy a usar fetch que es una promesa lol
+function retrieveData1 (){
+    
     const url1= 'https://gist.githubusercontent.com/josejbocanegra/be0461060d1c2d899740b8247089ba22/raw/916d2141e32e04031bda79c8886e8e4df0ae7f24/productos.json'
-    let data1
-    const peticion1 = new Promise( (resolve,reject) =>{
-        $.get(url1, cross ,(data)=>{
-            resolve(data)
-        }).fail(()=> reject('paila'))
+    let data =fetch (url1)
+    .then(response =>response.json())
+    .then(data1 => {
+        return data1 
     })
-    console.log('1')
-    data1 = peticion1.then((data)=>{
-        console.log('123')
-        console.log(data1)
-    })
+    return data
 }
+
+function retrieveData2(){
+    const url2= 'https://gist.githubusercontent.com/josejbocanegra/7b6febf87e9d986048a648487b35e693/raw/576531a2d0e601838fc3de997e021816a4b730f8/detallePedido.json'
+    let data =fetch (url2)
+    .then(response =>response.json())
+    .then(data1 => {
+        return data1 
+    })
+    return data
+}
+
+async function ejercicio3() {
+    let list = await retrieveData1()
+    let detail = await retrieveData2()
+    console.log(detail[1])
+    //console.log(list)
+    let map = new Array(list.length +1 ).fill(0)
+    for(let i = 0 ; i < detail.length ; i++){
+        act = detail[i]
+        map[parseInt(act.idproducto)] += parseInt(act.cantidad)
+    }
+
+    let maximo=Math.max(...map)
+    const equals = (element) => element===maximo
+
+    let index = map.findIndex(equals)
+    
+    console.log(list)
+    console.log(list[0].idproducto)
+    for (let i = 0 ; i < list.length ; i ++){
+        act = list[i]
+        if( parseInt(act.idproducto) === index){
+            document.getElementById('output').innerText = act.nombreProducto
+        }
+    }
+
+
+}
+
+
